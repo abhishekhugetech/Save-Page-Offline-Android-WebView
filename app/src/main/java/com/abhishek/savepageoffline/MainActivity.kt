@@ -2,11 +2,13 @@ package com.abhishek.savepageoffline
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -18,6 +20,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
+
+    lateinit var webChromeClient:VideoEnabledWebChromeClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +54,10 @@ class MainActivity : AppCompatActivity() {
                 return false
             }
         }
-        webView.webChromeClient = object : WebChromeClient(){
+        // Initialize the VideoEnabledWebChromeClient and set event handlers
+        val loadingView = layoutInflater.inflate(R.layout.view_loading_video, null); // Your own view, read class comments
+        webChromeClient = object : VideoEnabledWebChromeClient(nonVideoLayout, videoLayout, loadingView, webView) // See all available constructors...
+        {
             override fun onReceivedTitle(view: WebView?, title: String?) {
                 super.onReceivedTitle(view, title)
                 // Update Page title.
@@ -63,6 +70,37 @@ class MainActivity : AppCompatActivity() {
                 browserProgress.progress = newProgress
             }
         }
+        webChromeClient.setOnToggledFullscreen(object : VideoEnabledWebChromeClient.ToggledFullscreenCallback
+        {
+            override fun toggledFullscreen(fullscreen: Boolean) {
+
+                // Your code to handle the full-screen change, for example showing and hiding the title bar. Example:
+                if (fullscreen)
+                {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+                    appBar.visibility = View.GONE
+                    val attrs = getWindow().getAttributes()
+                    attrs.flags = WindowManager.LayoutParams.FLAG_FULLSCREEN or WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+                    getWindow().setAttributes(attrs)
+                    //noinspection all
+                    window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LOW_PROFILE;
+                }
+                else
+                {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                    appBar.visibility = View.VISIBLE
+                    val attrs = getWindow().getAttributes()
+                    attrs.flags = WindowManager.LayoutParams.FLAG_FULLSCREEN and WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+                    getWindow().setAttributes(attrs)
+                    //noinspection all
+                    getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+                }
+            }
+        });
+        webView.webChromeClient = webChromeClient
+
+        // Navigate everywhere you want, this classes have only been tested on YouTube's mobile site
+        webView.loadUrl("http://m.youtube.com");
     }
 
     private fun setClickListeners() {

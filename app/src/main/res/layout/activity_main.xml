@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,10 +10,10 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
         android:background="@color/progressColor"
         android:focusable="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -28,22 +27,21 @@
 
                 <ProgressBar
                     android:id="@+id/browserProgress"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                    android:progressDrawable="@drawable/progress_drawable"
-                    />
+                    android:progressDrawable="@drawable/progress_drawable" />
 
                 <TextView
                     android:id="@+id/pageTitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Google"
-                    android:textSize="18sp"
-                    android:singleLine="true"
-                    android:ellipsize="marquee"
                     android:layout_marginStart="16dp"
+                    android:ellipsize="marquee"
+                    android:singleLine="true"
+                    android:text="Google"
                     android:textColor="@color/toolbarItemColor"
+                    android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/goToSavedPage"
                     app:layout_constraintStart_toStartOf="parent"
@@ -54,8 +52,8 @@
                     android:id="@+id/saveWebPage"
                     android:layout_width="45dp"
                     android:layout_height="?attr/actionBarSize"
-                    android:src="@drawable/ic_file_download_black_24dp"
                     android:padding="10dp"
+                    android:src="@drawable/ic_file_download_black_24dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -64,11 +62,11 @@
                     android:id="@+id/goToSavedPage"
                     android:layout_width="45dp"
                     android:layout_height="?attr/actionBarSize"
-                    android:src="@drawable/ic_book_black_24dp"
                     android:padding="10dp"
+                    android:src="@drawable/ic_book_black_24dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/saveWebPage" />
+                    app:layout_constraintEnd_toStartOf="@+id/saveWebPage"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -77,13 +75,35 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <WebView
-        android:id="@+id/webView"
+    <!-- View that will be hidden when video goes fullscreen -->
+    <RelativeLayout
+        android:id="@+id/nonVideoLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/appBar"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBar">
 
-    </WebView>
+        <com.abhishek.savepageoffline.VideoEnabledWebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
+    <!-- View where the video will be shown when video goes fullscreen -->
+    <RelativeLayout
+        android:id="@+id/videoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- View that will be shown while the fullscreen video loads (maybe include a spinner and a "Loading..." message) -->
+        <View
+            android:id="@+id/videoLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

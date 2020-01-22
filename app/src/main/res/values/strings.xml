@@ -3,4 +3,5 @@
     <string name="save_webpage">Save WebPage</string>
     <string name="title_activity_sample_actiivty">SampleActiivty</string>
     <string name="saved_pages">Saved Pages</string>
+    <string name="loading_video">Loading video</string>
 </resources>
