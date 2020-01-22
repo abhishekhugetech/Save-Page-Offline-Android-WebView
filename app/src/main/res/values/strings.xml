@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">SavePageOffline</string>
+    <string name="save_webpage">Save WebPage</string>
+    <string name="title_activity_sample_actiivty">SampleActiivty</string>
+    <string name="saved_pages">Saved Pages</string>
+</resources>
